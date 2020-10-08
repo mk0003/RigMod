@@ -1,3 +1,4 @@
 {
-  "block.rigmod.random_item_generator_block": "Random Item Generator"
+  "block.rigmod.random_item_generator_block": "Random Item Generator",
+  "itemGroup.rigmod": "Random Item Generator"
 }

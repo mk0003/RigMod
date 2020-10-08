@@ -31,6 +31,12 @@ public class RandomItemGeneratorBlock extends Block {
 	@Override
 	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
 		if (!world.isRemote) {
+
+			if (player.isCreative()) {
+				super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+				return true;
+			}
+
 			ItemStack mainHandTool = player.getHeldItemMainhand();
 
 			boolean hasSilkTouch = false;
