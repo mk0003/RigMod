@@ -1,7 +1,21 @@
 {
+  "forge_marker": 1,
   "variants": {
-    "": {
-      "model": "rigmod:block/random_item_generator_block"
-    }
+    "normal": [
+      {
+        "model": "cube_all",
+        "textures": {
+          "all": "rigmod:blocks/random_item_generator_block"
+        }
+      }
+    ],
+    "inventory": [
+      {
+        "model": "cube_all",
+        "textures": {
+          "all": "rigmod:blocks/random_item_generator_block"
+        }
+      }
+    ]
   }
 }

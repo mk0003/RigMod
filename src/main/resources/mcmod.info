@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rigmod",
+  "name": "Random Item Generator Mod",
+  "description": "Adds Random Item Generator Block",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["mitat"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,22 +1,24 @@
 package com.mitat.rigmod.block;
 
+import com.mitat.rigmod.Rigmod;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 import java.util.Map;
@@ -25,23 +27,32 @@ import java.util.Optional;
 public class RandomItemGeneratorBlock extends Block {
 
 	public RandomItemGeneratorBlock() {
-		super(Properties.create(Material.ROCK).hardnessAndResistance(0.5f).harvestLevel(0).harvestTool(ToolType.PICKAXE));
+		super(Material.ROCK);
+		setHardness(0.5f);
+		setHarvestLevel("pickaxe", 0);
+		setUnlocalizedName(Rigmod.MODID + ".random_item_generator_block");
+		setRegistryName("random_item_generator_block");
+		setCreativeTab(Rigmod.RIG_ITEM_GROUP);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void initModel() {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 	}
 
 	@Override
-	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
 		if (!world.isRemote) {
 
 			if (player.isCreative()) {
-				super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
-				return true;
+				return super.removedByPlayer(state, world, pos, player, willHarvest);
 			}
 
 			ItemStack mainHandTool = player.getHeldItemMainhand();
 
 			boolean hasSilkTouch = false;
 			int fortuneLevel = 0;
-			if (mainHandTool.getToolTypes().contains(ToolType.PICKAXE)) {
+			if (mainHandTool.getItem().getToolClasses(mainHandTool).contains("pickaxe")) {
 				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(mainHandTool);
 				for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
 					if (entry.getKey() == Enchantments.SILK_TOUCH) {
@@ -64,22 +75,18 @@ public class RandomItemGeneratorBlock extends Block {
 
 					if (key.isPresent()) {
 						Item randomItem = ForgeRegistries.ITEMS.getValue(key.get());
-
-						ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(randomItem, 1));
-						world.addEntity(item);
+						if (randomItem != null)
+							InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(randomItem));
 					}
 				}
 
+				return false;
 			} else {
-				Item thisItem = BlockItem.BLOCK_TO_ITEM.get(this);
-				ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(thisItem, 1));
-				world.addEntity(item);
-
-				super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+				return super.removedByPlayer(state, world, pos, player, willHarvest);
 			}
 		}
 
-		return true;
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
 	private int calculateFortune(int fortuneLevel) {
