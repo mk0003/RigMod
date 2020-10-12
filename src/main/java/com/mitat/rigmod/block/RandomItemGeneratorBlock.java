@@ -65,14 +65,14 @@ public class RandomItemGeneratorBlock extends Block {
 					if (key.isPresent()) {
 						Item randomItem = ForgeRegistries.ITEMS.getValue(key.get());
 
-						ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(randomItem, 1));
+						ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(randomItem, 1));
 						world.addEntity(item);
 					}
 				}
 
 			} else {
 				Item thisItem = BlockItem.BLOCK_TO_ITEM.get(this);
-				ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(thisItem, 1));
+				ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(thisItem, 1));
 				world.addEntity(item);
 
 				super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
