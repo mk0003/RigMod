@@ -9,6 +9,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,8 +34,7 @@ public class RandomItemGeneratorBlock extends Block {
 		if (!world.isRemote) {
 
 			if (player.isCreative()) {
-				super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
-				return true;
+				return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 			}
 
 			ItemStack mainHandTool = player.getHeldItemMainhand();
@@ -64,22 +64,22 @@ public class RandomItemGeneratorBlock extends Block {
 
 					if (key.isPresent()) {
 						Item randomItem = ForgeRegistries.ITEMS.getValue(key.get());
-
-						ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(randomItem, 1));
-						world.addEntity(item);
+						if (randomItem != null)
+							InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(randomItem));
 					}
 				}
 
+				return false;
 			} else {
 				Item thisItem = BlockItem.BLOCK_TO_ITEM.get(this);
-				ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(thisItem, 1));
-				world.addEntity(item);
+				if (thisItem != null)
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(thisItem));
 
-				super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+				return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 			}
 		}
 
-		return true;
+		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 	}
 
 	private int calculateFortune(int fortuneLevel) {
