@@ -1,12 +1,12 @@
 package com.mitat.rigmod.block;
 
+import com.mitat.rigmod.setup.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.InventoryHelper;
@@ -51,6 +51,11 @@ public class RandomItemGeneratorBlock extends Block {
 					}
 				}
 			}
+
+			if (!Config.ALLOW_SILK_TOUCH.get())
+				hasSilkTouch = false;
+			if (!Config.ALLOW_FORTUNE.get())
+				fortuneLevel = 0;
 
 			if (!hasSilkTouch) {
 				Collection<ResourceLocation> itemKeyList = ForgeRegistries.ITEMS.getKeys();

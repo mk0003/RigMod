@@ -1,13 +1,16 @@
 package com.mitat.rigmod;
 
 import com.mitat.rigmod.block.RandomItemGeneratorBlock;
+import com.mitat.rigmod.setup.Config;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,6 +35,8 @@ public class Rigmod {
 	public static final RegistryObject<Item> RIG_ITEM = ITEMS.register("random_item_generator_item", () -> new BlockItem(RIG_BLOCK.get(), new Item.Properties().group(RIG_ITEM_GROUP)));
 
 	public Rigmod() {
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
+
 		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
