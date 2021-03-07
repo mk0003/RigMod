@@ -18,6 +18,8 @@ public class Config {
 	public static ForgeConfigSpec.BooleanValue ALLOW_FORTUNE;
 	public static ForgeConfigSpec.BooleanValue ALLOW_SILK_TOUCH;
 
+	public static ForgeConfigSpec.IntValue DURABILITY;
+
 	public static ForgeConfigSpec.ConfigValue<ArrayList<String>> ITEM_WHITELIST;
 	public static ForgeConfigSpec.ConfigValue<ArrayList<String>> ITEM_BLACKLIST;
 
@@ -35,6 +37,7 @@ public class Config {
 
 		ALLOW_FORTUNE = SERVER_BUILDER.comment("Allow fortune enchantment to give multiple drops").define("allowFortune", true);
 		ALLOW_SILK_TOUCH = SERVER_BUILDER.comment("Allow silk touch enchantment to drop item itself").define("allowSilkTouch", true);
+		DURABILITY = SERVER_BUILDER.comment("Block will permanently break after specified amount (Disabled if set to zero)").defineInRange("durability", 0, 0, Integer.MAX_VALUE);
 
 		SERVER_BUILDER.pop();
 
